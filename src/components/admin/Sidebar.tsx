@@ -26,10 +26,10 @@ export default function Sidebar({ activePage, setActivePage }: {
       </div>
 
       {/* Sidebar */}
-      <aside className={`bg-gradient-to-b from-white via-white to-red-500 text-black shadow-lg w-64 p-4 space-y-4 fixed inset-y-0 left-0 transform border-r
+      <aside className={`bg-white text-gray-800 shadow-lg w-64 p-4 space-y-4 fixed inset-y-0 left-0 transform border-r
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
         lg:translate-x-0 transition-transform duration-200`}>
-        <h2 className="text-xl font-bold text-black mb-6">Admin Panel</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-6">Admin Panel</h2>
         <nav className="space-y-2">
           {items.map(({ id, label, icon: Icon }) => (
             <button
@@ -40,8 +40,8 @@ export default function Sidebar({ activePage, setActivePage }: {
               }}
               className={`flex items-center w-full px-3 py-2 rounded-lg text-left transition-colors ${
                 activePage === id
-                  ? "bg-red-600/20 text-black"
-                  : "text-black/90 hover:bg-red-600/10"
+                  ? "bg-blue-100 text-blue-700"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Icon className="h-5 w-5 mr-3" />

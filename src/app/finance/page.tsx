@@ -4,6 +4,11 @@ import { useState } from "react";
 import Sidebar from "@/components/finance/Sidebar";
 import DashboardContent from "@/components/finance/DashboardContent";
 import { Bell } from "lucide-react";
+import SundaySchoolPage from "./records/sunday-school";
+import ConstructionPage from "./records/construction";
+import AnnouncementsPage from "./records/announcements";
+import ChurchAccountsPage from "./records/church-accounts";
+import ExpendituresPage from "./records/expenditures";
 
 export default function FinancePage() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -21,15 +26,15 @@ export default function FinancePage() {
       case "reports":
         return <div>📊 Reports Section</div>;
       case "sunday-school":
-        return <div>📘 Sunday School Records</div>;
+        return <SundaySchoolPage />;
       case "construction":
-        return <div>🏗️ Construction Records</div>;
+        return <ConstructionPage />;
       case "announcements":
-        return <div>📢 Announcements</div>;
+        return <AnnouncementsPage />;
       case "church-accounts":
-        return <div>💒 Church Accounts</div>;
+        return <ChurchAccountsPage />;
       case "expenditures":
-        return <div>💸 Expenditures</div>;
+        return <ExpendituresPage />;
       default:
         return <DashboardContent />;
     }
