@@ -178,50 +178,58 @@ export default function FinanceCharts({ recordType, from, to }: FinanceChartsPro
   }
 
   return (
-    <div className="space-y-6">
-      {/* Summary Cards */}
+    <div className="space-y-4 sm:space-y-6">
+      {/* Summary Cards - Responsive */}
       {recordType === "church-accounts" && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <h4 className="text-sm font-medium text-green-800">Total Offerings</h4>
-            <p className="text-2xl font-bold text-green-600">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200">
+            <h4 className="text-xs sm:text-sm font-medium text-green-800">Total Offerings</h4>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
               KES {summary.totalOfferings.toLocaleString()}
             </p>
           </div>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <h4 className="text-sm font-medium text-red-800">Total Expenditure</h4>
-            <p className="text-2xl font-bold text-red-600">
+          <div className="bg-red-50 p-3 sm:p-4 rounded-lg border border-red-200">
+            <h4 className="text-xs sm:text-sm font-medium text-red-800">Total Expenditure</h4>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600 break-words">
               KES {summary.totalExpenditure.toLocaleString()}
             </p>
           </div>
-          <div className={`p-4 rounded-lg border ${summary.netAmount >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-            <h4 className={`text-sm font-medium ${summary.netAmount >= 0 ? 'text-green-800' : 'text-red-800'}`}>
+          <div className={`p-3 sm:p-4 rounded-lg border ${summary.netAmount >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+            <h4 className={`text-xs sm:text-sm font-medium ${summary.netAmount >= 0 ? 'text-green-800' : 'text-red-800'}`}>
               Net Amount
             </h4>
-            <p className={`text-2xl font-bold ${summary.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <p className={`text-lg sm:text-xl lg:text-2xl font-bold break-words ${summary.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               KES {summary.netAmount.toLocaleString()}
             </p>
           </div>
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="text-sm font-medium text-blue-800">Records</h4>
-            <p className="text-2xl font-bold text-blue-600">{summary.recordCount}</p>
+          <div className="bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-200">
+            <h4 className="text-xs sm:text-sm font-medium text-blue-800">Records</h4>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">{summary.recordCount}</p>
           </div>
         </div>
       )}
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Charts - Responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Bar Chart - Offerings vs Expenditure */}
-        <div className="bg-white p-6 rounded-2xl shadow">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">📊 Offerings vs Expenditure</h3>
-          <div style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer>
+        <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-2xl shadow">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800">📊 Offerings vs Expenditure</h3>
+          <div style={{ width: "100%", height: "250px" }}>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <XAxis 
+                  dataKey="name" 
+                  fontSize={12}
+                  tick={{ fontSize: 10 }}
+                />
+                <YAxis 
+                  fontSize={12}
+                  tick={{ fontSize: 10 }}
+                />
                 <Tooltip 
                   formatter={(value, name) => [`KES ${value.toLocaleString()}`, name]}
+                  contentStyle={{ fontSize: '12px' }}
                 />
                 <Bar dataKey="totalOfferings" fill="#22c55e" name="Total Offerings" />
                 <Bar dataKey="totalExpenditure" fill="#ef4444" name="Total Expenditure" />
@@ -231,16 +239,24 @@ export default function FinanceCharts({ recordType, from, to }: FinanceChartsPro
         </div>
 
         {/* Line Chart - Net Amount Trend */}
-        <div className="bg-white p-6 rounded-2xl shadow">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">📈 Net Amount Trend</h3>
-          <div style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer>
+        <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-2xl shadow">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800">📈 Net Amount Trend</h3>
+          <div style={{ width: "100%", height: "250px" }}>
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <XAxis 
+                  dataKey="name" 
+                  fontSize={12}
+                  tick={{ fontSize: 10 }}
+                />
+                <YAxis 
+                  fontSize={12}
+                  tick={{ fontSize: 10 }}
+                />
                 <Tooltip 
                   formatter={(value) => [`KES ${value.toLocaleString()}`, 'Net Amount']}
+                  contentStyle={{ fontSize: '12px' }}
                 />
                 <Line 
                   type="monotone" 
@@ -256,10 +272,10 @@ export default function FinanceCharts({ recordType, from, to }: FinanceChartsPro
 
         {/* Pie Chart - Offerings Breakdown */}
         {recordType === "church-accounts" && (
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">🥧 Offerings Breakdown</h3>
-            <div style={{ width: "100%", height: 300 }}>
-              <ResponsiveContainer>
+          <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-2xl shadow">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800">🥧 Offerings Breakdown</h3>
+            <div style={{ width: "100%", height: "250px" }}>
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={[
@@ -271,7 +287,7 @@ export default function FinanceCharts({ recordType, from, to }: FinanceChartsPro
                     cy="50%"
                     labelLine={false}
                     label={(props: any) => `${props.name} ${(props.percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
+                    outerRadius={60}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -279,7 +295,7 @@ export default function FinanceCharts({ recordType, from, to }: FinanceChartsPro
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => `KES ${value.toLocaleString()}`} />
+                  <Tooltip formatter={(value) => `KES ${value.toLocaleString()}`} contentStyle={{ fontSize: '12px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -288,15 +304,15 @@ export default function FinanceCharts({ recordType, from, to }: FinanceChartsPro
 
         {/* Expenditure Breakdown */}
         {recordType === "church-accounts" && (
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">💸 Expenditure Breakdown</h3>
-            <div style={{ width: "100%", height: 300 }}>
-              <ResponsiveContainer>
+          <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-2xl shadow">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800">💸 Expenditure Breakdown</h3>
+            <div style={{ width: "100%", height: "250px" }}>
+              <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} layout="horizontal">
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" />
-                  <YAxis dataKey="name" type="category" width={80} />
-                  <Tooltip formatter={(value) => `KES ${value.toLocaleString()}`} />
+                  <XAxis type="number" fontSize={12} tick={{ fontSize: 10 }} />
+                  <YAxis dataKey="name" type="category" width={60} fontSize={12} tick={{ fontSize: 10 }} />
+                  <Tooltip formatter={(value) => `KES ${value.toLocaleString()}`} contentStyle={{ fontSize: '12px' }} />
                   <Bar dataKey="tithe" stackId="a" fill="#ef4444" name="Tithe" />
                   <Bar dataKey="apostolic" stackId="a" fill="#f97316" name="Apostolic" />
                   <Bar dataKey="bricks" stackId="a" fill="#eab308" name="Bricks" />

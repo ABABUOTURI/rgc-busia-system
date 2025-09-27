@@ -42,17 +42,17 @@ export default function ReportsPage() {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4 text-black">Reports & Analytics</h2>
+    <div className="space-y-4 sm:space-y-6">
+      <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-black">Reports & Analytics</h2>
 
-      {/* Filters Section */}
-      <div className="bg-white p-4 rounded-2xl shadow mb-4">
-        <div className="flex flex-col sm:flex-row gap-3 items-center">
-          {/* Record Type Filter */}
+      {/* Filters Section - Responsive */}
+      <div className="bg-white p-3 sm:p-4 rounded-2xl shadow">
+        <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center">
+          {/* Record Type Filter - Responsive */}
           <select
             value={recordType}
             onChange={(e) => setRecordType(e.target.value)}
-            className="border rounded px-3 py-2 text-black"
+            className="border rounded px-2 sm:px-3 py-2 text-black text-sm sm:text-base w-full lg:w-auto"
           >
             <option value="all">All Records</option>
             <option value="sunday-school">Sunday School Records</option>
@@ -61,36 +61,38 @@ export default function ReportsPage() {
             <option value="expenditure">Expenditure</option>
           </select>
 
-          {/* Date Range Filter */}
-          <input
-            type="date"
-            value={range.from}
-            onChange={(e) => setRange((r) => ({ ...r, from: e.target.value }))}
-            className="border rounded px-3 py-2 text-black"
-          />
-          <input
-            type="date"
-            value={range.to}
-            onChange={(e) => setRange((r) => ({ ...r, to: e.target.value }))}
-            className="border rounded px-3 py-2 text-black"
-          />
+          {/* Date Range Filter - Responsive */}
+          <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+            <input
+              type="date"
+              value={range.from}
+              onChange={(e) => setRange((r) => ({ ...r, from: e.target.value }))}
+              className="border rounded px-2 sm:px-3 py-2 text-black text-sm sm:text-base w-full sm:w-auto"
+            />
+            <input
+              type="date"
+              value={range.to}
+              onChange={(e) => setRange((r) => ({ ...r, to: e.target.value }))}
+              className="border rounded px-2 sm:px-3 py-2 text-black text-sm sm:text-base w-full sm:w-auto"
+            />
+          </div>
 
-          {/* Filter Button */}
-          <button className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
+          {/* Filter Button - Responsive */}
+          <button className="px-3 sm:px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 text-sm sm:text-base w-full lg:w-auto">
             Filter
           </button>
 
-          {/* Export Buttons */}
-          <div className="ml-auto flex gap-2">
+          {/* Export Buttons - Responsive */}
+          <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto lg:ml-auto">
             <button
               onClick={() => handleExport("pdf")}
-              className="px-3 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+              className="px-3 py-2 rounded bg-red-600 text-white hover:bg-red-700 text-sm sm:text-base w-full sm:w-auto"
             >
               Export PDF
             </button>
             <button
               onClick={() => handleExport("excel")}
-              className="px-3 py-2 rounded bg-green-600 text-white hover:bg-green-700"
+              className="px-3 py-2 rounded bg-green-600 text-white hover:bg-green-700 text-sm sm:text-base w-full sm:w-auto"
             >
               Export Excel
             </button>

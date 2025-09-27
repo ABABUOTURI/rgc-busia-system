@@ -140,14 +140,14 @@ export default function DashboardContent() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Filter */}
+    <div className="space-y-4 sm:space-y-6">
+      {/* Filter - Responsive */}
       <div className="flex flex-wrap gap-2">
         {(["weekly","monthly","quarterly","yearly"] as const).map(f => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1 rounded-full text-sm ${filter === f ? "bg-red-600 text-white" : "bg-white border"}`}
+            className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm ${filter === f ? "bg-red-600 text-white" : "bg-white border"}`}
           >
             {f}
           </button>
@@ -155,49 +155,57 @@ export default function DashboardContent() {
       </div>
 
       {/* Quick stats (responsive grid) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
-          <div className="text-sm text-gray-500">Total Offerings</div>
-          <div className="text-2xl font-bold text-green-600">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
+          <div className="text-xs sm:text-sm text-gray-500">Total Offerings</div>
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
             KES {data.totalOfferings.toLocaleString()}
           </div>
         </div>
 
-        <div className="p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
-          <div className="text-sm text-gray-500">Total Expenditures</div>
-          <div className="text-2xl font-bold text-red-600">
+        <div className="p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
+          <div className="text-xs sm:text-sm text-gray-500">Total Expenditures</div>
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600 break-words">
             KES {data.totalExpenditure.toLocaleString()}
           </div>
         </div>
 
-        <div className={`p-4 bg-white/70 backdrop-blur rounded-2xl shadow ${data.netAmount >= 0 ? 'border-green-200' : 'border-red-200'}`}>
-          <div className="text-sm text-gray-500">Net Balance</div>
-          <div className={`text-2xl font-bold ${data.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+        <div className={`p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow ${data.netAmount >= 0 ? 'border-green-200' : 'border-red-200'}`}>
+          <div className="text-xs sm:text-sm text-gray-500">Net Balance</div>
+          <div className={`text-lg sm:text-xl lg:text-2xl font-bold break-words ${data.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             KES {data.netAmount.toLocaleString()}
           </div>
         </div>
 
-        <div className="p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
-          <div className="text-sm text-gray-500">Records</div>
-          <div className="text-2xl font-bold text-blue-600">{data.recordCount}</div>
+        <div className="p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
+          <div className="text-xs sm:text-sm text-gray-500">Records</div>
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">{data.recordCount}</div>
         </div>
       </div>
 
-      {/* Chart */}
-      <div className="p-4 bg-white rounded-2xl shadow">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-lg">Offerings vs Expenditure</h3>
-          <div className="text-sm text-gray-500">Period: {filter}</div>
+      {/* Chart - Responsive */}
+      <div className="p-3 sm:p-4 bg-white rounded-2xl shadow">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
+          <h3 className="font-semibold text-base sm:text-lg">Offerings vs Expenditure</h3>
+          <div className="text-xs sm:text-sm text-gray-500">Period: {filter}</div>
         </div>
 
-        <div style={{ width: "100%", height: 300 }}>
-          <ResponsiveContainer>
+        <div className="w-full" style={{ height: "250px" }}>
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data.chartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
+              <XAxis 
+                dataKey="month" 
+                fontSize={12}
+                tick={{ fontSize: 10 }}
+              />
+              <YAxis 
+                fontSize={12}
+                tick={{ fontSize: 10 }}
+              />
               <Tooltip 
                 formatter={(value, name) => [`KES ${value.toLocaleString()}`, name]}
+                contentStyle={{ fontSize: '12px' }}
               />
               <Line type="monotone" dataKey="offerings" stroke="#22c55e" strokeWidth={2} name="Offerings" />
               <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} name="Expenditures" />
@@ -206,46 +214,46 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Recent activities and quick actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="p-4 bg-white rounded-2xl shadow">
-          <h4 className="font-semibold mb-2">Recent Activities</h4>
-          <ul className="text-sm text-gray-600 space-y-2">
+      {/* Recent activities and quick actions - Responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+        <div className="p-3 sm:p-4 bg-white rounded-2xl shadow">
+          <h4 className="font-semibold mb-2 text-sm sm:text-base">Recent Activities</h4>
+          <ul className="text-xs sm:text-sm text-gray-600 space-y-2">
             {data.recentActivities.length > 0 ? (
               data.recentActivities.map((activity) => (
-                <li key={activity.id} className="flex justify-between items-center">
-                  <span>{activity.description}</span>
+                <li key={activity.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                  <span className="truncate">{activity.description}</span>
                   {activity.amount && (
-                    <span className="font-semibold text-green-600">
+                    <span className="font-semibold text-green-600 text-xs sm:text-sm whitespace-nowrap">
                       KES {activity.amount.toLocaleString()}
                     </span>
                   )}
                 </li>
               ))
             ) : (
-              <li className="text-gray-400">No recent activities</li>
+              <li className="text-gray-400 text-xs sm:text-sm">No recent activities</li>
             )}
           </ul>
         </div>
 
-        <div className="p-4 bg-white rounded-2xl shadow">
-          <h4 className="font-semibold mb-2">Quick Actions</h4>
+        <div className="p-3 sm:p-4 bg-white rounded-2xl shadow">
+          <h4 className="font-semibold mb-2 text-sm sm:text-base">Quick Actions</h4>
           <div className="flex flex-col sm:flex-row gap-2">
             <button 
               disabled 
-              className="px-4 py-2 rounded bg-gray-400 text-white cursor-not-allowed opacity-50"
+              className="px-3 sm:px-4 py-2 rounded bg-gray-400 text-white cursor-not-allowed opacity-50 text-xs sm:text-sm"
             >
               Add Church Account
             </button>
             <button 
               disabled 
-              className="px-4 py-2 rounded bg-gray-400 text-white cursor-not-allowed opacity-50"
+              className="px-3 sm:px-4 py-2 rounded bg-gray-400 text-white cursor-not-allowed opacity-50 text-xs sm:text-sm"
             >
               Add Expenditure
             </button>
             <button 
               disabled 
-              className="px-4 py-2 rounded bg-gray-400 text-white cursor-not-allowed opacity-50"
+              className="px-3 sm:px-4 py-2 rounded bg-gray-400 text-white cursor-not-allowed opacity-50 text-xs sm:text-sm"
             >
               Export Report
             </button>

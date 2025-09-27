@@ -14,6 +14,7 @@ export default function Sidebar({
   showMobileMenu?: boolean;
   setShowMobileMenu?: (show: boolean) => void;
 }) {
+  console.log('Sidebar props:', { activePage, showMobileMenu });
 
   const items = [
     { id: "dashboard", label: "Dashboard", icon: Home },
@@ -31,7 +32,7 @@ export default function Sidebar({
       <aside
         className={`bg-gradient-to-b from-white via-white to-red-500 text-black shadow-lg w-64 p-4 space-y-4 fixed inset-y-0 left-0 transform border-r
           ${showMobileMenu ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 transition-transform duration-200 z-30`}
+          lg:translate-x-0 transition-transform duration-200 z-50`}
       >
         <h2 className="text-xl font-bold text-black mb-6">Finance Panel</h2>
         <nav className="space-y-2">

@@ -248,21 +248,21 @@ export default function ChurchAccountsPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-black">Church Accounts</h2>
+      {/* Header - Responsive */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-black">Church Accounts</h2>
         <button
           onClick={() => setOpen(true)}
-          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-700 font-semibold"
+          className="bg-red-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg hover:bg-red-700 font-semibold text-sm sm:text-base w-full sm:w-auto"
         >
           + Add Record
         </button>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">📊 Filter Collections</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Filters - Responsive */}
+      <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-2xl shadow-lg mb-4 sm:mb-6">
+        <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800">📊 Filter Collections</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
             <input
@@ -311,76 +311,76 @@ export default function ChurchAccountsPage() {
             </select>
           </div>
         </div>
-        <div className="mt-4 flex gap-2">
+        <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2 sm:items-center">
           <button
             onClick={() => setFilters({ from: "", to: "", year: "", month: "" })}
-            className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            className="px-3 sm:px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm sm:text-base w-full sm:w-auto"
           >
             Clear Filters
           </button>
-          <div className="text-sm text-gray-600 flex items-center">
+          <div className="text-xs sm:text-sm text-gray-600 flex items-center">
             Showing {filteredRecords.length} of {records.length} records
           </div>
         </div>
       </div>
 
-      {/* Professional Tables */}
-      <div className="bg-white p-6 rounded-2xl shadow-lg space-y-8">
+      {/* Professional Tables - Responsive */}
+      <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-2xl shadow-lg space-y-6 sm:space-y-8">
         {/* Offerings Section */}
         <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
-            <h3 className="text-lg font-bold text-white flex items-center">
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+            <h3 className="text-base sm:text-lg font-bold text-white flex items-center">
               💰 Offerings Summary
             </h3>
           </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-700 mb-2">Main Service</h4>
-                <p className="text-2xl font-bold text-green-600">
+          <div className="p-3 sm:p-4 lg:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">Main Service</h4>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.mainService, 0))}
                 </p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-700 mb-2">HBC Jerusalem</h4>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Jerusalem</h4>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.jerusalem, 0))}
                 </p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-700 mb-2">HBC Emmanuel</h4>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Emmanuel</h4>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.emmanuel, 0))}
                 </p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-700 mb-2">HBC Ebenezer</h4>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Ebenezer</h4>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.ebenezer, 0))}
                 </p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-700 mb-2">HBC Agape</h4>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Agape</h4>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.agape, 0))}
                 </p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-700 mb-2">Sunday School</h4>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">Sunday School</h4>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.sundaySchool, 0))}
                 </p>
               </div>
             </div>
-            <div className="mt-6 pt-4 border-t-4 border-red-600">
-              <div className="flex justify-between items-center">
+            <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t-4 border-red-600">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <div>
-                  <span className="text-xl font-bold text-gray-800">Total Offerings</span>
+                  <span className="text-lg sm:text-xl font-bold text-gray-800">Total Offerings</span>
                   {/* <div className="text-sm text-gray-600 mt-1">
                     (Main Service + All HBC + Sunday School)
                   </div> */}
                 </div>
-                <span className="text-3xl font-bold text-red-600">
+                <span className="text-2xl sm:text-3xl font-bold text-red-600 break-words">
                   {formatCurrency(calculateOfferingsTotal())}
                 </span>
               </div>
