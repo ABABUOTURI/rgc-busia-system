@@ -1,4 +1,4 @@
-// app/api/sunday-school/route.ts
+// app/api/announcements/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import mongoose from "mongoose";
@@ -12,12 +12,12 @@ export async function GET(req: NextRequest) {
       throw new Error("Database connection failed");
     }
 
-    const sundaySchoolRecords = await db.collection("sunday_school").find({}).sort({ date: -1 }).toArray();
+    const announcements = await db.collection("announcements").find({}).sort({ createdAt: -1 }).limit(10).toArray();
     
-    return NextResponse.json(sundaySchoolRecords);
+    return NextResponse.json(announcements);
   } catch (error) {
-    console.error("Error fetching Sunday School records:", error);
-    return NextResponse.json({ error: "Failed to fetch Sunday School records" }, { status: 500 });
+    console.error("Error fetching announcements:", error);
+    return NextResponse.json({ error: "Failed to fetch announcements" }, { status: 500 });
   }
 }
 
@@ -31,21 +31,21 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const sundaySchoolRecord = {
+    const announcement = {
       ...body,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
 
-    const result = await db.collection("sunday_school").insertOne(sundaySchoolRecord);
+    const result = await db.collection("announcements").insertOne(announcement);
     
     return NextResponse.json({ 
       success: true, 
       id: result.insertedId,
-      message: "Sunday School record created successfully" 
+      message: "Announcement created successfully" 
     });
   } catch (error) {
-    console.error("Error creating Sunday School record:", error);
-    return NextResponse.json({ error: "Failed to create Sunday School record" }, { status: 500 });
+    console.error("Error creating announcement:", error);
+    return NextResponse.json({ error: "Failed to create announcement" }, { status: 500 });
   }
 }
