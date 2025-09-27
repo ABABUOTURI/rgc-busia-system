@@ -12,7 +12,13 @@ const data = [
   { name: "May", donations: 1890, expenses: 4800 },
 ];
 
-export default function FinanceCharts() {
+interface FinanceChartsProps {
+  recordType: string;
+  from: string;
+  to: string;
+}
+
+export default function FinanceCharts({ recordType, from, to }: FinanceChartsProps) {
   return (
     <div className="bg-white p-4 rounded-2xl shadow">
       <h3 className="text-lg font-semibold mb-3">Donation & Expense Chart</h3>

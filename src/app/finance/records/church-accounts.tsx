@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ToastContainer } from "@/components/ui/toast";
 
 interface ChurchAccount {
   _id?: string;
@@ -35,7 +36,19 @@ interface ChurchAccount {
 
 export default function ChurchAccountsPage() {
   const [records, setRecords] = useState<ChurchAccount[]>([]);
+  const [filteredRecords, setFilteredRecords] = useState<ChurchAccount[]>([]);
   const [open, setOpen] = useState(false);
+  const [toasts, setToasts] = useState<Array<{
+    id: string;
+    type: "success" | "error";
+    message: string;
+  }>>([]);
+  const [filters, setFilters] = useState({
+    from: "",
+    to: "",
+    year: "",
+    month: ""
+  });
   // keep inputs as strings so placeholders show; convert on submit
   const [form, setForm] = useState<any>({
     date: "",
@@ -62,16 +75,51 @@ export default function ChurchAccountsPage() {
   const [step, setStep] = useState(1);
   const router = useRouter();
 
+  const addToast = (type: "success" | "error", message: string) => {
+    const id = Date.now().toString();
+    setToasts(prev => [...prev, { id, type, message }]);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
+
   // Fetch records
   const fetchRecords = async () => {
-    const res = await fetch("/api/church-accounts");
-    const data = await res.json();
-    setRecords(data);
+    try {
+      const res = await fetch("/api/church-accounts");
+      const data = await res.json();
+      setRecords(data);
+      setFilteredRecords(data);
+    } catch (error) {
+      console.error("Error fetching records:", error);
+      addToast("error", "❌ Failed to load records");
+    }
   };
 
   useEffect(() => {
     fetchRecords();
   }, []);
+
+  // Apply filters
+  useEffect(() => {
+    let filtered = [...records];
+
+    if (filters.from) {
+      filtered = filtered.filter(record => new Date(record.date) >= new Date(filters.from));
+    }
+    if (filters.to) {
+      filtered = filtered.filter(record => new Date(record.date) <= new Date(filters.to));
+    }
+    if (filters.year) {
+      filtered = filtered.filter(record => new Date(record.date).getFullYear().toString() === filters.year);
+    }
+    if (filters.month) {
+      filtered = filtered.filter(record => (new Date(record.date).getMonth() + 1).toString() === filters.month);
+    }
+
+    setFilteredRecords(filtered);
+  }, [records, filters]);
 
   // Save record
   const handleSubmit = async () => {
@@ -113,17 +161,39 @@ export default function ChurchAccountsPage() {
       });
 
       if (res.ok) {
-        alert("✅ Record saved successfully");
+        addToast("success", "✅ Church account record saved successfully!");
         setOpen(false);
         setStep(1);
+        setForm({
+          date: "",
+          offerings: {
+            mainService: "",
+            hbc: { jerusalem: "", emmanuel: "", ebenezer: "", agape: "" },
+            sundaySchool: "",
+            total: "",
+          },
+          expenditure: {
+            tithe: "",
+            apostolic: "",
+            bricks: "",
+            banking: "",
+            pastorsUse: "",
+            sundaySchool: "",
+          },
+          closing: {
+            tithe: "",
+            apostolic: "",
+            transactionFee: "",
+          },
+        });
         fetchRecords();
         router.refresh();
       } else {
-        alert("❌ Failed to save record");
+        addToast("error", "❌ Failed to save record. Please try again.");
       }
     } catch (err) {
       console.error("Error saving record:", err);
-      alert("❌ Error saving record");
+      addToast("error", "❌ Error saving record. Please check your connection.");
     }
   };
 
@@ -139,84 +209,321 @@ export default function ChurchAccountsPage() {
     );
   };
 
+  // Calculate totals for display using filtered records
+  const calculateOfferingsTotal = () => {
+    return filteredRecords.reduce((total, record) => {
+      // Calculate total from all individual offerings
+      const mainService = record.offerings.mainService;
+      const hbcTotal = record.offerings.hbc.jerusalem + record.offerings.hbc.emmanuel + 
+                      record.offerings.hbc.ebenezer + record.offerings.hbc.agape;
+      const sundaySchool = record.offerings.sundaySchool;
+      
+      return total + mainService + hbcTotal + sundaySchool;
+    }, 0);
+  };
+
+  const calculateExpenditureTotal = () => {
+    return filteredRecords.reduce((total, record) => {
+      const expenditureTotal = Object.values(record.expenditure).reduce((sum, val) => sum + val, 0);
+      return total + expenditureTotal;
+    }, 0);
+  };
+
+  const calculateClosingTotal = () => {
+    return filteredRecords.reduce((total, record) => {
+      if (record.closing) {
+        return total + Object.values(record.closing).reduce((sum, val) => sum + val, 0);
+      }
+      return total;
+    }, 0);
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-KE', {
+      style: 'currency',
+      currency: 'KES',
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
+
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xl font-semibold text-black">Church Accounts</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-black">Church Accounts</h2>
         <button
           onClick={() => setOpen(true)}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700"
+          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-700 font-semibold"
         >
           + Add Record
         </button>
       </div>
 
-      {/* Placeholder Tables */}
-      <div className="bg-white p-4 rounded-2xl shadow space-y-6">
-        {/* Offerings */}
-        <div>
-          <h3 className="font-semibold mb-2 text-black">Offerings</h3>
-          <table className="min-w-full text-sm text-black">
-            <thead>
-              <tr className="bg-red-700 text-white">
-                <th className="p-2 text-left">Field</th>
-                <th className="p-2 text-left">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td className="p-2">Main Service</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">HBC - Jerusalem</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">HBC - Emmanuel</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">HBC - Ebenezer</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">HBC - Agape</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">Sunday School</td><td className="p-2">KES -</td></tr>
-              <hr />
-              <tr><td className="p-2 font-bold">Total</td><td className="p-2 font-bold">KES -</td></tr>
-            </tbody>
-          </table>
+      {/* Filters */}
+      <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">📊 Filter Collections</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+            <input
+              type="date"
+              value={filters.from}
+              onChange={(e) => setFilters({ ...filters, from: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+            <input
+              type="date"
+              value={filters.to}
+              onChange={(e) => setFilters({ ...filters, to: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+            <select
+              value={filters.year}
+              onChange={(e) => setFilters({ ...filters, year: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            >
+              <option value="">All Years</option>
+              {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+            <select
+              value={filters.month}
+              onChange={(e) => setFilters({ ...filters, month: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            >
+              <option value="">All Months</option>
+              {[
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+              ].map((month, index) => (
+                <option key={month} value={index + 1}>{month}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="mt-4 flex gap-2">
+          <button
+            onClick={() => setFilters({ from: "", to: "", year: "", month: "" })}
+            className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+          >
+            Clear Filters
+          </button>
+          <div className="text-sm text-gray-600 flex items-center">
+            Showing {filteredRecords.length} of {records.length} records
+          </div>
+        </div>
+      </div>
+
+      {/* Professional Tables */}
+      <div className="bg-white p-6 rounded-2xl shadow-lg space-y-8">
+        {/* Offerings Section */}
+        <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
+            <h3 className="text-lg font-bold text-white flex items-center">
+              💰 Offerings Summary
+            </h3>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Main Service</h4>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.mainService, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">HBC Jerusalem</h4>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.jerusalem, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">HBC Emmanuel</h4>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.emmanuel, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">HBC Ebenezer</h4>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.ebenezer, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">HBC Agape</h4>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.agape, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Sunday School</h4>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.sundaySchool, 0))}
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 pt-4 border-t-4 border-red-600">
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className="text-xl font-bold text-gray-800">Total Offerings</span>
+                  {/* <div className="text-sm text-gray-600 mt-1">
+                    (Main Service + All HBC + Sunday School)
+                  </div> */}
+                </div>
+                <span className="text-3xl font-bold text-red-600">
+                  {formatCurrency(calculateOfferingsTotal())}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Expenditure */}
-        <div>
-          <h3 className="font-semibold mb-2 text-black">Expenditure</h3>
-          <table className="min-w-full text-sm text-black">
-            <thead>
-              <tr className="bg-red-700 text-white">
-                <th className="p-2 text-left">Field</th>
-                <th className="p-2 text-left">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td className="p-2">Tithe 10%</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">Apostolic 2%</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">Bricks/Blocks</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">Banking</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">Pastor's Use</td><td className="p-2">KES -</td></tr>
-              <tr><td className="p-2">Sunday School</td><td className="p-2">KES -</td></tr>
-              <hr />
-              <tr><td className="p-2 font-bold">Total</td><td className="p-2 font-bold">KES -</td></tr>
-            </tbody>
-          </table>
+        {/* Expenditure Section */}
+        <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-orange-600 to-orange-700 px-6 py-4">
+            <h3 className="text-lg font-bold text-white flex items-center">
+              💸 Expenditure Summary
+            </h3>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Tithe (10%)</h4>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.tithe, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Apostolic (2%)</h4>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.apostolic, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Bricks/Blocks</h4>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.bricks, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Banking</h4>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.banking, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Pastor's Use</h4>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.pastorsUse, 0))}
+                </p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-gray-700 mb-2">Sunday School</h4>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.sundaySchool, 0))}
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 pt-4 border-t-4 border-orange-600">
+              <div className="flex justify-between items-center">
+                <span className="text-xl font-bold text-gray-800">Total Expenditure</span>
+                <span className="text-3xl font-bold text-orange-600">
+                  {formatCurrency(calculateExpenditureTotal())}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Closing the Month */}
         {isLastSunday() && (
-          <div>
-            <h3 className="font-semibold mb-2 text-black">Closing the Month</h3>
-            <table className="min-w-full text-sm text-black">
-              <thead>
-                <tr className="bg-red-700 text-white">
-                  <th className="p-2 text-left">Field</th>
-                  <th className="p-2 text-left">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td className="p-2">Tithe 10%</td><td className="p-2">KES -</td></tr>
-                <tr><td className="p-2">Apostolic</td><td className="p-2">KES -</td></tr>
-                <tr><td className="p-2">Transaction Fee</td><td className="p-2">KES -</td></tr>
-              </tbody>
-            </table>
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
+              <h3 className="text-lg font-bold text-white flex items-center">
+                🏁 Month Closing Summary
+              </h3>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">Tithe (10%)</h4>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {formatCurrency(filteredRecords.reduce((sum, r) => sum + (r.closing?.tithe || 0), 0))}
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">Apostolic</h4>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {formatCurrency(filteredRecords.reduce((sum, r) => sum + (r.closing?.apostolic || 0), 0))}
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">Transaction Fee</h4>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {formatCurrency(filteredRecords.reduce((sum, r) => sum + (r.closing?.transactionFee || 0), 0))}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t-4 border-purple-600">
+                <div className="flex justify-between items-center">
+                  <span className="text-xl font-bold text-gray-800">Total Closing</span>
+                  <span className="text-3xl font-bold text-purple-600">
+                    {formatCurrency(calculateClosingTotal())}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Records List */}
+        {filteredRecords.length > 0 && (
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
+              <h3 className="text-lg font-bold text-white flex items-center">
+                📋 Recent Records
+              </h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Date</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Main Service</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Total Offerings</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Total Expenditure</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Net</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredRecords.slice(0, 5).map((record, index) => {
+                    const expenditureTotal = Object.values(record.expenditure).reduce((sum, val) => sum + val, 0);
+                    const net = record.offerings.total - expenditureTotal;
+                    return (
+                      <tr key={record._id || index} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 text-gray-900">{new Date(record.date).toLocaleDateString()}</td>
+                        <td className="px-4 py-3 text-green-600 font-semibold">{formatCurrency(record.offerings.mainService)}</td>
+                        <td className="px-4 py-3 text-green-600 font-semibold">{formatCurrency(record.offerings.total)}</td>
+                        <td className="px-4 py-3 text-orange-600 font-semibold">{formatCurrency(expenditureTotal)}</td>
+                        <td className={`px-4 py-3 font-bold ${net >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {formatCurrency(net)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
@@ -371,6 +678,14 @@ export default function ChurchAccountsPage() {
             {/* Buttons */}
             <div className="flex justify-between mt-4 gap-2">
               <div>
+                {step === 1 && (
+                  <button 
+                    className="px-4 py-2 rounded border hover:bg-gray-50" 
+                    onClick={() => setOpen(false)}
+                  >
+                    Back to View
+                  </button>
+                )}
                 {step > 1 && (
                   <button className="px-4 py-2 rounded border" onClick={() => setStep(step - 1)}>Back</button>
                 )}
@@ -378,16 +693,21 @@ export default function ChurchAccountsPage() {
                   <button className="ml-2 px-4 py-2 rounded bg-red-600 text-white" onClick={() => setStep(step + 1)}>Next</button>
                 )}
               </div>
-              <button
-                onClick={handleSubmit}
-                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
-              >
-                Save
-              </button>
+              {step === 4 && (
+                <button
+                  onClick={handleSubmit}
+                  className="px-6 py-2 rounded bg-green-600 text-white hover:bg-green-700 font-semibold"
+                >
+                  💾 Save Record
+                </button>
+              )}
             </div>
           </div>
         </div>
       )}
+      
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

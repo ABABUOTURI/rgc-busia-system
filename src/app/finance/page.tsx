@@ -9,6 +9,7 @@ import ConstructionPage from "./records/construction";
 import AnnouncementsPage from "./records/announcements";
 import ChurchAccountsPage from "./records/church-accounts";
 import ExpendituresPage from "./records/expenditures";
+import ReportsPage from "./reports/page";
 
 export default function FinancePage() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -24,7 +25,7 @@ export default function FinancePage() {
       case "dashboard":
         return <DashboardContent />;
       case "reports":
-        return <div>📊 Reports Section</div>;
+        return <ReportsPage/>;
       case "sunday-school":
         return <SundaySchoolPage />;
       case "construction":
