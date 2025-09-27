@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/finance/Sidebar";
 import DashboardContent from "@/components/finance/DashboardContent";
-import { Bell, X, CheckCircle, AlertCircle, Info } from "lucide-react";
+import { Bell, X, CheckCircle, AlertCircle, Info, Menu } from "lucide-react";
 import SundaySchoolPage from "./records/sunday-school";
 import ConstructionPage from "./records/construction";
 import AnnouncementsPage from "./records/announcements";
@@ -25,6 +25,7 @@ export default function FinancePage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // Fetch notifications from database
   const fetchNotifications = async () => {
@@ -95,7 +96,13 @@ export default function FinancePage() {
         notif.id === notificationId ? { ...notif, read: true } : notif
       )
     );
-    setUnreadCount(prev => Math.max(0, prev - 1));
+    // Update unread count based on current notifications
+    setUnreadCount(prev => {
+      const updatedNotifications = notifications.map(notif => 
+        notif.id === notificationId ? { ...notif, read: true } : notif
+      );
+      return updatedNotifications.filter(n => !n.read).length;
+    });
   };
 
   // Mark all as read
@@ -106,8 +113,12 @@ export default function FinancePage() {
 
   // Remove notification
   const removeNotification = (notificationId: string) => {
+    const notificationToRemove = notifications.find(n => n.id === notificationId);
     setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
-    setUnreadCount(prev => Math.max(0, prev - 1));
+    // Only decrease count if the removed notification was unread
+    if (notificationToRemove && !notificationToRemove.read) {
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    }
   };
 
   // Fetch notifications on component mount
@@ -119,6 +130,19 @@ export default function FinancePage() {
     
     return () => clearInterval(interval);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showDropdown && !target.closest('.notification-dropdown')) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDropdown]);
 
   const renderContent = () => {
     switch (activePage) {
@@ -134,8 +158,8 @@ export default function FinancePage() {
         return <AnnouncementsPage />;
       case "church-accounts":
         return <ChurchAccountsPage />;
-      case "expenditures":
-        return <ExpendituresPage />;
+      // case "expenditures":
+      //   return <ExpendituresPage />;
       default:
         return <DashboardContent />;
     }
@@ -143,14 +167,35 @@ export default function FinancePage() {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+      {/* Mobile Menu Overlay */}
+      {showMobileMenu && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setShowMobileMenu(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      <Sidebar 
+        activePage={activePage} 
+        setActivePage={setActivePage} 
+        showMobileMenu={showMobileMenu}
+        setShowMobileMenu={setShowMobileMenu}
+      />
 
       {/* Main Area */}
       <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
         {/* Top Header */}
         <header className="sticky top-0 z-20 bg-white border-b shadow-sm">
           <div className="flex items-center justify-between px-4 py-3 relative">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            >
+              <Menu className="h-6 w-6 text-gray-700" />
+            </button>
+
             {/* Search */}
             <div className="flex items-center gap-3 w-full max-w-lg">
               <input
@@ -163,7 +208,7 @@ export default function FinancePage() {
             {/* Right Side */}
             <div className="flex items-center gap-6 relative">
               {/* Notifications */}
-              <div className="relative">
+              <div className="relative notification-dropdown">
                 <button
                   onClick={() => setShowDropdown((prev) => !prev)}
                   className="relative"
