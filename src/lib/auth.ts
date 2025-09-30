@@ -1,31 +1,34 @@
-import jwt, { type Secret, type SignOptions, type JwtPayload } from "jsonwebtoken";
+import { cookies } from "next/headers";
+import { verifyToken } from "./jwt"; // your existing JWT helpers
+import { connectDB } from "@/lib/mongodb"; // your MongoDB connector
+import User from "@/models/User"; // your rgc_auth.users model
+import { ObjectId } from "mongodb";
 
-const JWT_SECRET = process.env.JWT_SECRET as Secret;
-
-if (!JWT_SECRET) {
-  throw new Error("⚠️ Missing JWT_SECRET in .env.local");
-}
-
-/**
- * Sign JWT Token
- * @param payload - Data you want inside token (e.g., userId, role)
- * @param expiresIn - Expiry time (default: 1d)
- */
-export function signToken(
-  payload: string | object | Buffer,
-  expiresIn: SignOptions["expiresIn"] = "1d"
-): string {
-  return jwt.sign(payload, JWT_SECRET as Secret, { expiresIn });
-}
-
-/**
- * Verify JWT Token
- * @param token - JWT string
- */
-export function verifyToken(token: string): JwtPayload | string | null {
+export async function getUserFromSession() {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    // In your setup, cookies() returns a Promise<ReadonlyRequestCookies>
+    const token = (await cookies()).get("session")?.value;
+
+    if (!token) return null;
+
+    const decoded = verifyToken(token) as { userId?: string };
+    if (!decoded?.userId) return null;
+
+    await connectDB();
+
+    const user = await User.findById(decoded.userId)
+      .select("name email") // ✅ only name + email
+      .lean<{ name: string; email: string }>();
+
+    if (!user) return null;
+
+    return {
+      _id: new ObjectId(decoded.userId),
+      name: user.name,
+      email: user.email,
+    } as { _id: ObjectId; name: string; email: string };
   } catch (err) {
-    return null; // Invalid token
+    console.error("getUserFromSession error:", err);
+    return null;
   }
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import User from '@/models/User';
-import { signToken } from '@/lib/auth';
+import { signToken } from '@/lib/jwt';
 
 export async function POST(req: Request) {
   try {
