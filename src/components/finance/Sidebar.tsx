@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Home, FileText, BookOpen, Building, Bell, DollarSign, BarChart, Menu } from "lucide-react";
+import { Home, FileText, BookOpen, Building, Bell, DollarSign, Menu } from "lucide-react";
 
 export default function Sidebar({
   activePage,
@@ -23,7 +23,6 @@ export default function Sidebar({
     { id: "announcements", label: "Announcements", icon: Bell },
     { id: "church-accounts", label: "Church Accounts", icon: DollarSign },
     // { id: "expenditures", label: "Expenditures", icon: FileText },
-    { id: "reports", label: "Reports", icon: BarChart },
   ];
 
   return (

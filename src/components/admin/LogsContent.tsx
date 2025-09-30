@@ -16,6 +16,7 @@ export default function LogsContent() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterUser, setFilterUser] = useState("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function fetchLogs() {
@@ -32,9 +33,18 @@ export default function LogsContent() {
     fetchLogs();
   }, []);
 
-  const filteredLogs = filterUser === "all"
-    ? logs
-    : logs.filter(log => log.username === filterUser);
+  const filteredLogs = (filterUser === "all" ? logs : logs.filter(log => log.username === filterUser))
+    .filter(log => {
+      const q = search.trim().toLowerCase();
+      if (!q) return true;
+      return (
+        log.username.toLowerCase().includes(q) ||
+        log.action.toLowerCase().includes(q) ||
+        (log.device?.toLowerCase().includes(q) ?? false) ||
+        (log.ip?.toLowerCase().includes(q) ?? false) ||
+        (log.mac?.toLowerCase().includes(q) ?? false)
+      );
+    });
 
   const uniqueUsers = Array.from(new Set(logs.map(log => log.username)));
 
@@ -45,7 +55,7 @@ export default function LogsContent() {
       <h2 className="text-xl font-bold mb-4">Activity Logs</h2>
 
       {/* Filters */}
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-4 flex items-center gap-3 flex-wrap">
         <label htmlFor="userFilter" className="text-sm font-medium">
           Filter by User:
         </label>
@@ -60,6 +70,14 @@ export default function LogsContent() {
             <option key={user} value={user}>{user}</option>
           ))}
         </select>
+
+        <input
+          type="text"
+          placeholder="Search logs (user, action, device, IP, MAC)"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="rounded border px-2 py-1 text-sm flex-1 min-w-[200px]"
+        />
       </div>
 
       {/* Logs List */}

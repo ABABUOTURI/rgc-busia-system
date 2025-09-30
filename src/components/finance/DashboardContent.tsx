@@ -2,18 +2,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+// Charts removed for finance dashboard simplification
 
 interface DashboardData {
   totalOfferings: number;
   totalExpenditure: number;
   netAmount: number;
   recordCount: number;
-  chartData: Array<{
-    month: string;
-    offerings: number;
-    expenses: number;
-  }>;
+  chartData: Array<never>;
   recentActivities: Array<{
     id: string;
     description: string;
@@ -58,34 +54,7 @@ export default function DashboardContent() {
             return sum + Object.values(record.expenditure || {}).reduce((expSum: number, val: any) => expSum + (val || 0), 0);
           }, 0);
 
-          // Group data by month for chart
-          const monthlyData: { [key: string]: { offerings: number; expenses: number } } = {};
-          records.forEach((record: any) => {
-            const date = new Date(record.date);
-            const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-            
-            if (!monthlyData[monthKey]) {
-              monthlyData[monthKey] = { offerings: 0, expenses: 0 };
-            }
-            
-            const mainService = record.offerings?.mainService || 0;
-            const hbcTotal = (record.offerings?.hbc?.jerusalem || 0) + 
-                            (record.offerings?.hbc?.emmanuel || 0) + 
-                            (record.offerings?.hbc?.ebenezer || 0) + 
-                            (record.offerings?.hbc?.agape || 0);
-            const sundaySchool = record.offerings?.sundaySchool || 0;
-            const offerings = mainService + hbcTotal + sundaySchool;
-            const expenses = Object.values(record.expenditure || {}).reduce((sum: number, val: any) => sum + (val || 0), 0);
-            
-            monthlyData[monthKey].offerings += offerings;
-            monthlyData[monthKey].expenses += expenses;
-          });
-
-          const chartData = Object.entries(monthlyData).map(([month, data]) => ({
-            month,
-            offerings: data.offerings,
-            expenses: data.expenses
-          }));
+          // Charts removed; no monthly aggregation needed
 
           // Generate recent activities from records
           const recentActivities = records.slice(0, 5).map((record: any) => {
@@ -109,7 +78,7 @@ export default function DashboardContent() {
             totalExpenditure,
             netAmount: totalOfferings - totalExpenditure,
             recordCount: records.length,
-            chartData,
+            chartData: [],
             recentActivities
           });
         }
@@ -141,7 +110,7 @@ export default function DashboardContent() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Filter - Responsive */}
+      {/* Filter - Responsive
       <div className="flex flex-wrap gap-2">
         {(["weekly","monthly","quarterly","yearly"] as const).map(f => (
           <button
@@ -152,7 +121,7 @@ export default function DashboardContent() {
             {f}
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Quick stats (responsive grid) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -183,36 +152,7 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Chart - Responsive */}
-      <div className="p-3 sm:p-4 bg-white rounded-2xl shadow">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
-          <h3 className="font-semibold text-base sm:text-lg">Offerings vs Expenditure</h3>
-          <div className="text-xs sm:text-sm text-gray-500">Period: {filter}</div>
-        </div>
-
-        <div className="w-full" style={{ height: "250px" }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data.chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="month" 
-                fontSize={12}
-                tick={{ fontSize: 10 }}
-              />
-              <YAxis 
-                fontSize={12}
-                tick={{ fontSize: 10 }}
-              />
-              <Tooltip 
-                formatter={(value, name) => [`KES ${value.toLocaleString()}`, name]}
-                contentStyle={{ fontSize: '12px' }}
-              />
-              <Line type="monotone" dataKey="offerings" stroke="#22c55e" strokeWidth={2} name="Offerings" />
-              <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} name="Expenditures" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      {/* Chart removed per requirement */}
 
       {/* Recent activities and quick actions - Responsive */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">

@@ -9,7 +9,7 @@ import ConstructionPage from "./records/construction";
 import AnnouncementsPage from "./records/announcements";
 import ChurchAccountsPage from "./records/church-accounts";
 import ExpendituresPage from "./records/expenditures";
-import ReportsPage from "./reports/page";
+// Reports moved to Admin
 
 interface Notification {
   id: string;
@@ -148,8 +148,7 @@ export default function FinancePage() {
     switch (activePage) {
       case "dashboard":
         return <DashboardContent />;
-      case "reports":
-        return <ReportsPage/>;
+      // reports moved to Admin
       case "sunday-school":
         return <SundaySchoolPage />;
       case "construction":
@@ -235,7 +234,7 @@ export default function FinancePage() {
                       {unreadCount > 0 && (
                         <button
                           onClick={markAllAsRead}
-                          className="text-xs text-blue-600 hover:text-blue-800 whitespace-nowrap"
+                          className="text-xs text-gray-600 hover:text-gray-800 whitespace-nowrap"
                         >
                           Mark all as read
                         </button>
@@ -247,7 +246,7 @@ export default function FinancePage() {
                           <li
                             key={notification.id}
                             className={`p-3 sm:p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                              !notification.read ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                              !notification.read ? 'bg-blue-50 border-l-4 border-l-gray-500' : ''
                             }`}
                             onClick={() => markAsRead(notification.id)}
                           >
@@ -255,7 +254,7 @@ export default function FinancePage() {
                               <div className="flex items-start space-x-2 sm:space-x-3 flex-1 min-w-0">
                                 <div className="flex-shrink-0 mt-1">
                                   {notification.type === "success" && <CheckCircle className="h-4 w-4 text-green-500" />}
-                                  {notification.type === "info" && <Info className="h-4 w-4 text-blue-500" />}
+                                  {notification.type === "info" && <Info className="h-4 w-4 text-gray-500" />}
                                   {notification.type === "warning" && <AlertCircle className="h-4 w-4 text-yellow-500" />}
                                   {notification.type === "error" && <AlertCircle className="h-4 w-4 text-red-500" />}
                                 </div>

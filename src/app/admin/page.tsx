@@ -7,6 +7,8 @@ import DashboardContent from "../../components/admin/DashboardContent";
 import UsersContent from "../../components/admin/UsersContent";
 import LogsContent from "../../components/admin/LogsContent";
 import SettingsContent from "../../components/admin/SettingsContent";
+import AnnouncementsContent from "../../components/admin/AnnouncementsContent";
+import ReportsPage from "../finance/reports/page";
 import { Bell } from "lucide-react";
 
 interface DecodedToken {
@@ -20,6 +22,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [activePage, setActivePage] = useState("dashboard");
   const [userName, setUserName] = useState("");
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [notifications, setNotifications] = useState<string[]>([
     "New user registered: Finance Officer",
     "Backup completed successfully",
@@ -71,8 +74,12 @@ export default function AdminPage() {
         return <DashboardContent />;
       case "users":
         return <UsersContent />;
+      case "announcements":
+        return <AnnouncementsContent />;
       case "logs":
         return <LogsContent />;
+      case "reports":
+        return <ReportsPage />;
       case "settings":
         return <SettingsContent />;
       default:
@@ -82,18 +89,37 @@ export default function AdminPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      {/* Mobile Menu Overlay */}
+      {showMobileMenu && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setShowMobileMenu(false)}
+        />
+      )}
+      <Sidebar 
+        activePage={activePage} 
+        setActivePage={setActivePage} 
+        showMobileMenu={showMobileMenu}
+        setShowMobileMenu={setShowMobileMenu}
+      />
       <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
         {/* Top Header */}
         <header className="sticky top-0 z-20 bg-white border-b shadow-sm">
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center justify-between px-2 sm:px-4 py-3 relative">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100 flex-shrink-0"
+            >
+              <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-gray-700" />
+            </button>
             {/* Left side: Welcome */}
             <h2 className="text-lg font-semibold text-gray-800">
               Welcome, {userName || "Admin"} 👋
             </h2>
 
             {/* Right side */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 relative flex-shrink-0">
               {/* Search input (smaller) */}
               <div className="hidden sm:block w-48">
                 <input
