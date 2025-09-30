@@ -126,29 +126,29 @@ export default function DashboardContent() {
       {/* Quick stats (responsive grid) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
-          <div className="text-xs sm:text-sm text-gray-500">Total Offerings</div>
-          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
+          <div className="text-xs sm:text-sm text-gray-700">Total Offerings</div>
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-black break-words">
             KES {data.totalOfferings.toLocaleString()}
           </div>
         </div>
 
         <div className="p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
-          <div className="text-xs sm:text-sm text-gray-500">Total Expenditures</div>
-          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600 break-words">
+          <div className="text-xs sm:text-sm text-gray-700">Total Expenditures</div>
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-black break-words">
             KES {data.totalExpenditure.toLocaleString()}
           </div>
         </div>
 
         <div className={`p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow ${data.netAmount >= 0 ? 'border-green-200' : 'border-red-200'}`}>
-          <div className="text-xs sm:text-sm text-gray-500">Net Balance</div>
-          <div className={`text-lg sm:text-xl lg:text-2xl font-bold break-words ${data.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <div className="text-xs sm:text-sm text-gray-700">Net Balance</div>
+          <div className={`text-lg sm:text-xl lg:text-2xl font-bold break-words ${data.netAmount >= 0 ? 'text-black' : 'text-black'}`}>
             KES {data.netAmount.toLocaleString()}
           </div>
         </div>
 
         <div className="p-3 sm:p-4 bg-white/70 backdrop-blur rounded-2xl shadow">
-          <div className="text-xs sm:text-sm text-gray-500">Records</div>
-          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">{data.recordCount}</div>
+          <div className="text-xs sm:text-sm text-gray-700">Records</div>
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-black">{data.recordCount}</div>
         </div>
       </div>
 
@@ -157,14 +157,14 @@ export default function DashboardContent() {
       {/* Recent activities and quick actions - Responsive */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         <div className="p-3 sm:p-4 bg-white rounded-2xl shadow">
-          <h4 className="font-semibold mb-2 text-sm sm:text-base">Recent Activities</h4>
+          <h4 className="font-semibold mb-2 text-sm sm:text-base text-gray-700">Recent Activities</h4>
           <ul className="text-xs sm:text-sm text-gray-600 space-y-2">
             {data.recentActivities.length > 0 ? (
               data.recentActivities.map((activity) => (
                 <li key={activity.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
                   <span className="truncate">{activity.description}</span>
                   {activity.amount && (
-                    <span className="font-semibold text-green-600 text-xs sm:text-sm whitespace-nowrap">
+                    <span className="font-semibold text-black text-xs sm:text-sm whitespace-nowrap">
                       KES {activity.amount.toLocaleString()}
                     </span>
                   )}
@@ -177,7 +177,7 @@ export default function DashboardContent() {
         </div>
 
         <div className="p-3 sm:p-4 bg-white rounded-2xl shadow">
-          <h4 className="font-semibold mb-2 text-sm sm:text-base">Quick Actions</h4>
+          <h4 className="font-semibold mb-2 text-sm sm:text-base text-gray-700">Quick Actions</h4>
           <div className="flex flex-col sm:flex-row gap-2">
             <button 
               disabled 
