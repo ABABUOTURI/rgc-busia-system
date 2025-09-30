@@ -261,7 +261,7 @@ export default function ChurchAccountsPage() {
 
       {/* Filters - Responsive */}
       <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-2xl shadow-lg mb-4 sm:mb-6">
-        <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800">📊 Filter Collections</h3>
+        <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800">Filter Collections</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
@@ -269,7 +269,7 @@ export default function ChurchAccountsPage() {
               type="date"
               value={filters.from}
               onChange={(e) => setFilters({ ...filters, from: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700"
             />
           </div>
           <div>
@@ -278,7 +278,7 @@ export default function ChurchAccountsPage() {
               type="date"
               value={filters.to}
               onChange={(e) => setFilters({ ...filters, to: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700"
             />
           </div>
           <div>
@@ -286,7 +286,7 @@ export default function ChurchAccountsPage() {
             <select
               value={filters.year}
               onChange={(e) => setFilters({ ...filters, year: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700"
             >
               <option value="">All Years</option>
               {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
@@ -299,7 +299,7 @@ export default function ChurchAccountsPage() {
             <select
               value={filters.month}
               onChange={(e) => setFilters({ ...filters, month: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700"
             >
               <option value="">All Months</option>
               {[
@@ -329,45 +329,45 @@ export default function ChurchAccountsPage() {
         {/* Offerings Section */}
         <div className="border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gradient-to-r from-red-600 to-red-700 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-            <h3 className="text-base sm:text-lg font-bold text-white flex items-center">
-              💰 Offerings Summary
-            </h3>
+            <h5 className="text-lg font-bold text-white flex items-center">
+              Offerings Summary
+            </h5>
           </div>
           <div className="p-3 sm:p-4 lg:p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+              <div className="bg-gray-50 p-2 sm:p-3 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">Main Service</h4>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
+                <p className="text-lg sm:text-xl lg:text-xl font-bold text-black break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.mainService, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Jerusalem</h4>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
+                <p className="text-lg sm:text-xl lg:text-xl font-bold text-black break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.jerusalem, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Emmanuel</h4>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
+                <p className="text-lg sm:text-xl lg:text-xl font-bold text-black break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.emmanuel, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Ebenezer</h4>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
+                <p className="text-lg sm:text-xl lg:text-xl font-bold text-black break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.ebenezer, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">HBC Agape</h4>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
+                <p className="text-lg sm:text-xl lg:text-xl font-bold text-black break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.hbc.agape, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">Sunday School</h4>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 break-words">
+                <p className="text-lg sm:text-xl lg:text-xl font-bold text-black break-words">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.offerings.sundaySchool, 0))}
                 </p>
               </div>
@@ -380,7 +380,7 @@ export default function ChurchAccountsPage() {
                     (Main Service + All HBC + Sunday School)
                   </div> */}
                 </div>
-                <span className="text-2xl sm:text-3xl font-bold text-red-600 break-words">
+                <span className="text-1xl sm:text-1xl font-bold text-gray-900 break-words">
                   {formatCurrency(calculateOfferingsTotal())}
                 </span>
               </div>
@@ -390,46 +390,46 @@ export default function ChurchAccountsPage() {
 
         {/* Expenditure Section */}
         <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-orange-600 to-orange-700 px-6 py-4">
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
             <h3 className="text-lg font-bold text-white flex items-center">
-              💸 Expenditure Summary
+              Expenditure Summary
             </h3>
           </div>
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2">Tithe (10%)</h4>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-xl font-bold text-black">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.tithe, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2">Apostolic (2%)</h4>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-xl font-bold text-black">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.apostolic, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2">Bricks/Blocks</h4>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-xl font-bold text-black">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.bricks, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2">Banking</h4>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-xl font-bold text-black">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.banking, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2">Pastor's Use</h4>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-xl font-bold text-black">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.pastorsUse, 0))}
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-700 mb-2">Sunday School</h4>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-xl font-bold text-black">
                   {formatCurrency(filteredRecords.reduce((sum, r) => sum + r.expenditure.sundaySchool, 0))}
                 </p>
               </div>
@@ -437,7 +437,7 @@ export default function ChurchAccountsPage() {
             <div className="mt-6 pt-4 border-t-4 border-orange-600">
               <div className="flex justify-between items-center">
                 <span className="text-xl font-bold text-gray-800">Total Expenditure</span>
-                <span className="text-3xl font-bold text-orange-600">
+                <span className="text-1xl font-bold text-gray-900">
                   {formatCurrency(calculateExpenditureTotal())}
                 </span>
               </div>
@@ -448,36 +448,36 @@ export default function ChurchAccountsPage() {
         {/* Closing the Month */}
         {isLastSunday() && (
           <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
+            <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
               <h3 className="text-lg font-bold text-white flex items-center">
-                🏁 Month Closing Summary
+                Month Closing Summary
               </h3>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-700 mb-2">Tithe (10%)</h4>
-                  <p className="text-2xl font-bold text-purple-600">
+                  <p className="text-xl font-bold text-black">
                     {formatCurrency(filteredRecords.reduce((sum, r) => sum + (r.closing?.tithe || 0), 0))}
                   </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-700 mb-2">Apostolic</h4>
-                  <p className="text-2xl font-bold text-purple-600">
+                  <p className="text-xl font-bold text-black">
                     {formatCurrency(filteredRecords.reduce((sum, r) => sum + (r.closing?.apostolic || 0), 0))}
                   </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-700 mb-2">Transaction Fee</h4>
-                  <p className="text-2xl font-bold text-purple-600">
+                  <p className="text-xl font-bold text-black">
                     {formatCurrency(filteredRecords.reduce((sum, r) => sum + (r.closing?.transactionFee || 0), 0))}
                   </p>
                 </div>
               </div>
-              <div className="mt-6 pt-4 border-t-4 border-purple-600">
+              <div className="mt-6 pt-4 border-t-4 border-gray-600">
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold text-gray-800">Total Closing</span>
-                  <span className="text-3xl font-bold text-purple-600">
+                  <span className="text-1xl font-bold text-gray-900">
                     {formatCurrency(calculateClosingTotal())}
                   </span>
                 </div>
@@ -491,7 +491,7 @@ export default function ChurchAccountsPage() {
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
               <h3 className="text-lg font-bold text-white flex items-center">
-                📋 Recent Records
+                Recent Records
               </h3>
             </div>
             <div className="overflow-x-auto">
@@ -512,10 +512,10 @@ export default function ChurchAccountsPage() {
                     return (
                       <tr key={record._id || index} className="hover:bg-gray-50">
                         <td className="px-4 py-3 text-gray-900">{new Date(record.date).toLocaleDateString()}</td>
-                        <td className="px-4 py-3 text-green-600 font-semibold">{formatCurrency(record.offerings.mainService)}</td>
-                        <td className="px-4 py-3 text-green-600 font-semibold">{formatCurrency(record.offerings.total)}</td>
-                        <td className="px-4 py-3 text-orange-600 font-semibold">{formatCurrency(expenditureTotal)}</td>
-                        <td className={`px-4 py-3 font-bold ${net >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <td className="px-4 py-3 text-black font-semibold">{formatCurrency(record.offerings.mainService)}</td>
+                        <td className="px-4 py-3 text-black font-semibold">{formatCurrency(record.offerings.total)}</td>
+                        <td className="px-4 py-3 text-black font-semibold">{formatCurrency(expenditureTotal)}</td>
+                        <td className={`px-4 py-3 font-bold ${net >= 0 ? 'text-black' : 'text-black'}`}>
                           {formatCurrency(net)}
                         </td>
                       </tr>
@@ -534,14 +534,14 @@ export default function ChurchAccountsPage() {
           <div className="bg-white p-6 rounded-2xl w-full max-w-4xl">
             <h3 className="text-lg font-bold mb-4 text-black">Add Church Account Record</h3>
             {/* Stepper */}
-            <div className="flex items-center justify-between mb-3 text-sm">
+            <div className="flex items-center justify-between mb-3 text-sm text-black">
               <div>Step {step} of 4</div>
-              <div className="space-x-2">
+              <div className="space-x-2 text-black">
                 {step > 1 && (
-                  <button className="px-3 py-1 rounded border" onClick={() => setStep(step - 1)}>Back</button>
+                  <button className="px-3 py-1 rounded border bg-gray-700 text-white" onClick={() => setStep(step - 1)}>Back</button>
                 )}
                 {step < 4 && (
-                  <button className="px-3 py-1 rounded bg-red-600 text-white" onClick={() => setStep(step + 1)}>Next</button>
+                  <button className="px-3 py-1 rounded bg-gray-700 text-white" onClick={() => setStep(step + 1)}>Next</button>
                 )}
               </div>
             </div>
@@ -680,25 +680,25 @@ export default function ChurchAccountsPage() {
               <div>
                 {step === 1 && (
                   <button 
-                    className="px-4 py-2 rounded border hover:bg-gray-50" 
+                    className="px-4 py-2 rounded border hover:bg-gray-50 text-black" 
                     onClick={() => setOpen(false)}
                   >
                     Back to View
                   </button>
                 )}
                 {step > 1 && (
-                  <button className="px-4 py-2 rounded border" onClick={() => setStep(step - 1)}>Back</button>
+                  <button className="px-4 py-2 rounded border text-black" onClick={() => setStep(step - 1)}>Back</button>
                 )}
                 {step < 4 && (
-                  <button className="ml-2 px-4 py-2 rounded bg-red-600 text-white" onClick={() => setStep(step + 1)}>Next</button>
+                  <button className="ml-2 px-4 py-2 rounded bg-gray-800 text-white" onClick={() => setStep(step + 1)}>Next</button>
                 )}
               </div>
               {step === 4 && (
                 <button
                   onClick={handleSubmit}
-                  className="px-6 py-2 rounded bg-green-600 text-white hover:bg-green-700 font-semibold"
+                  className="px-6 py-2 rounded bg-red-700 text-white hover:bg-red-800 font-semibold"
                 >
-                  💾 Save Record
+                  Save Record
                 </button>
               )}
             </div>
