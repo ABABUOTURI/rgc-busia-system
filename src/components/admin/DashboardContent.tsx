@@ -18,6 +18,11 @@ interface Activity {
   details: string;
 }
 
+interface UserData {
+  name: string;
+}
+
+
 export default function DashboardContent() {
   const [sundaySchool, setSundaySchool] = useState<RecordItem[]>([]);
   const [churchAccounts, setChurchAccounts] = useState<RecordItem[]>([]);
@@ -26,6 +31,22 @@ export default function DashboardContent() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const userData = await res.json();
+          setUser(userData.user);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+      }
+    };
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -70,6 +91,16 @@ export default function DashboardContent() {
 
   return (
     <div className="space-y-6 text-black">
+       {/* ✅ Welcome Message */}
+       <div className="p-4  text-black ">
+        <h2 className="text-xl sm:text-2xl font-bold">
+          Welcome back{user ? `, ${user.name}` : ""} 
+        </h2>
+        <p className="text-sm sm:text-base opacity-90">
+          Empowering financial stewardship with clarity and transparency
+        </p>
+      </div>
+
       {/* Records in 2-column grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Sunday School Records */}

@@ -17,16 +17,15 @@ export async function getUserFromSession() {
     await connectDB();
 
     const user = await User.findById(decoded.userId)
-      .select("name email") // ✅ only name + email
-      .lean<{ name: string; email: string }>();
+      .select("name") // ✅ only name + email
+      .lean<{ name: string }>();
 
     if (!user) return null;
 
     return {
       _id: new ObjectId(decoded.userId),
       name: user.name,
-      email: user.email,
-    } as { _id: ObjectId; name: string; email: string };
+    } as { _id: ObjectId; name: string };
   } catch (err) {
     console.error("getUserFromSession error:", err);
     return null;

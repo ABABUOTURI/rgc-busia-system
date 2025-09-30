@@ -80,10 +80,10 @@ export default function NotificationsContent() {
   }
 
   return (
-    <div className="space-y-3 p-4">
-      <div className="flex items-center justify-between">
+    <div className="space-y-3 p-3 sm:p-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <h2 className="text-lg font-semibold text-black">Notifications</h2>
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2 text-sm flex-wrap">
           <button onClick={() => setFilter('all')} className={`px-3 py-1 rounded ${filter==='all'?'bg-gray-700 text-white':'bg-white'}`}>All</button>
           <button onClick={() => setFilter('unread')} className={`px-3 py-1 rounded ${filter==='unread'?'bg-gray-700 text-white':'bg-white'}`}>Unread</button>
           <button onClick={() => setFilter('read')} className={`px-3 py-1 rounded ${filter==='read'?'bg-gray-700 text-white':'bg-white'}`}>Read</button>
@@ -91,15 +91,15 @@ export default function NotificationsContent() {
       </div>
       <ul className="space-y-2">
         {filtered.map((n) => (
-          <li key={n._id} className={`bg-white rounded-lg  shadow p-3 ${!isRead(n._id) ? 'border-l-4 border-l-red-600' : ''}`} onClick={() => markAsRead(n._id)}>
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-black">{n.title}</h3>
-              <span className="text-xs text-gray-500">
+          <li key={n._id} className={`bg-white rounded-lg  shadow p-2 sm:p-3 ${!isRead(n._id) ? 'border-l-4 border-l-red-600' : ''}`} onClick={() => markAsRead(n._id)}>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+              <h3 className="font-semibold text-black break-words">{n.title}</h3>
+              <span className="text-xs text-gray-500 whitespace-nowrap">
                 {new Date(n.date || n.createdAt || Date.now()).toLocaleString()}
               </span>
             </div>
             {n.message && (
-              <p className="text-sm text-gray-700 mt-1">{n.message}</p>
+              <p className="text-sm text-gray-700 mt-1 break-words">{n.message}</p>
             )}
             {n.createdBy && (
               <p className="text-xs text-gray-500 mt-2">By {n.createdBy}</p>

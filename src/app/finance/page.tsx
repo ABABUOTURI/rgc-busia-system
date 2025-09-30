@@ -9,6 +9,7 @@ import ConstructionPage from "./records/construction";
 import AnnouncementsPage from "./records/announcements";
 import ChurchAccountsPage from "./records/church-accounts";
 import ExpendituresPage from "./records/expenditures";
+import NotificationsContent from "@/components/finance/NotificationsContent";
 // Reports moved to Admin
 
 interface Notification {
@@ -157,8 +158,8 @@ export default function FinancePage() {
         return <AnnouncementsPage />;
       case "church-accounts":
         return <ChurchAccountsPage />;
-      // case "expenditures":
-      //   return <ExpendituresPage />;
+      case "notifications":
+        return <NotificationsContent />;
       default:
         return <DashboardContent />;
     }

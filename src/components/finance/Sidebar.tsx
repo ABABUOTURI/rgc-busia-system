@@ -71,7 +71,7 @@ export default function Sidebar({
     <>
       {/* Sidebar */}
       <aside
-        className={`bg-gradient-to-b from-white via-white to-red-500 text-black shadow-lg w-64 p-4 flex flex-col fixed inset-y-0 left-0 transform border-r
+        className={`bg-gradient-to-b from-white via-white to-red-500 text-black shadow-lg w-64 p-4 flex flex-col fixed inset-y-0 left-0 transform 
           ${showMobileMenu ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 transition-transform duration-200 z-50`}
       >
@@ -91,15 +91,14 @@ export default function Sidebar({
         {/* User Profile */}
         {user && (
           <div
-            className="flex items-center space-x-3 cursor-pointer p-2 hover:bg-red-100 rounded-lg mb-4"
+            className="flex items-center space-x-3 cursor-pointer p-2  rounded-lg mb-4 bg-red-700 "
             onClick={() => setShowProfileModal(true)}
           >
-            <div className="w-10 h-10 flex items-center justify-center rounded-full border bg-red-600 text-white font-bold">
+            <div className="w-10 h-10 flex items-center justify-center rounded-full  bg-white text-black font-bold">
               {getInitials(user.name)}
             </div>
             <div>
-              <p className="font-semibold text-sm">{user.name}</p>
-              <p className="text-xs text-gray-600">{user.email}</p>
+              <p className="font-semibold text-sm text-white">{user.name}</p>
             </div>
           </div>
         )}
