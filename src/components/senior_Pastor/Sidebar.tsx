@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import {
   Home,
-  Users,
-  Settings,
   FileText,
-  Menu,
-  BarChart,
+  BookOpen,
+  Building,
   Bell,
+  DollarSign,
   LogOut,
 } from "lucide-react";
 
@@ -23,18 +22,16 @@ export default function Sidebar({
   showMobileMenu?: boolean;
   setShowMobileMenu?: (show: boolean) => void;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [user, setUser] = useState<any>(null);
 
   const items = [
     { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "users", label: "Users", icon: Users },
+    { id: "sunday-school", label: "Sunday School", icon: BookOpen },
+    { id: "construction", label: "Construction", icon: Building },
     { id: "announcements", label: "Announcements", icon: Bell },
-    { id: "logs", label: "Activity Logs", icon: FileText },
-    { id: "reports", label: "Reports", icon: BarChart },
-    { id: "settings", label: "Settings", icon: Settings },
-    { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "church-accounts", label: "Church Accounts", icon: DollarSign },
+    { id: "notifications", label: "Notifications", icon: FileText },
   ];
 
   // Fetch logged-in user
@@ -56,7 +53,9 @@ export default function Sidebar({
   const getInitials = (name: string) => {
     if (!name) return "U";
     const parts = name.split(" ");
-    return ((parts[0]?.[0] || "") + (parts[1]?.[0] || "")).toUpperCase();
+    return (
+      (parts[0]?.[0] || "") + (parts[1]?.[0] || "")
+    ).toUpperCase();
   };
 
   const handleLogout = async () => {
@@ -70,48 +69,36 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile Topbar */}
-      <div className="lg:hidden flex items-center justify-between">
-        <h1 className="text-lg font-bold text-black">Admin</h1>
-        <button
-          onClick={() => {
-            setIsOpen(!isOpen);
-            if (setShowMobileMenu) setShowMobileMenu(!showMobileMenu);
-          }}
-        >
-          <Menu className="h-6 w-6 text-black" />
-        </button>
-      </div>
-
       {/* Sidebar */}
       <aside
         className={`bg-gradient-to-b from-white via-white to-red-500 text-black shadow-lg w-64 p-4 flex flex-col fixed inset-y-0 left-0 transform 
-        ${(isOpen || showMobileMenu) ? "translate-x-0" : "-translate-x-full"} 
-        lg:translate-x-0 transition-transform duration-200 z-50`}
+          ${showMobileMenu ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0 transition-transform duration-200 z-50`}
       >
-        {/* Branding */}
+        {/* Top Church Branding */}
         <div className="flex items-center space-x-3 bg-white rounded-lg px-3 py-2 mb-4">
-          <img src="/rgc.png" alt="Church Logo" className="w-10 h-10 rounded" />
+          <img
+            src="/rgc.png"
+            alt="Church Logo"
+            className="w-10 h-10 rounded"
+          />
           <div>
-            <p className="font-bold text-sm text-red-700">
-              Redeemed Gospel Church
-            </p>
-            <p className="text-xs text-black font-semibold">Admin Portal</p>
+            <p className="font-bold text-sm text-red-700">Redeemed Gospel Church Busia</p>
+            <p className="text-xs  text-black font-semibold">Finance Portal</p>
           </div>
         </div>
 
         {/* User Profile */}
         {user && (
           <div
-            className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg mb-4 bg-red-700"
+            className="flex items-center space-x-3 cursor-pointer p-2  rounded-lg mb-4 bg-red-700 "
             onClick={() => setShowProfileModal(true)}
           >
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black font-bold">
+            <div className="w-10 h-10 flex items-center justify-center rounded-full  bg-white text-black font-bold">
               {getInitials(user.name)}
             </div>
             <div>
               <p className="font-semibold text-sm text-white">{user.name}</p>
-              <p className="text-xs text-white/80">{user.email}</p>
             </div>
           </div>
         )}
@@ -123,8 +110,9 @@ export default function Sidebar({
               key={id}
               onClick={() => {
                 setActivePage(id);
-                setIsOpen(false);
-                if (setShowMobileMenu) setShowMobileMenu(false);
+                if (setShowMobileMenu) {
+                  setShowMobileMenu(false);
+                }
               }}
               className={`flex items-center w-full px-3 py-2 rounded-lg text-left transition-colors ${
                 activePage === id
@@ -138,7 +126,7 @@ export default function Sidebar({
           ))}
         </nav>
 
-        {/* Logout */}
+        {/* Logout at bottom */}
         <button
           onClick={handleLogout}
           className="flex items-center px-3 py-2 mt-4 rounded-lg text-left text-red-700 hover:bg-red-100 transition-colors"
@@ -153,6 +141,7 @@ export default function Sidebar({
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-96 p-6">
             <h2 className="text-lg font-bold mb-4">Edit Profile</h2>
+
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
